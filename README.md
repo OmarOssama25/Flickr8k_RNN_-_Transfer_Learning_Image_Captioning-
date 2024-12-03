@@ -252,3 +252,64 @@ Default hyperparameters:
 - The model can be fine-tuned by adjusting hyperparameters
 
 Remember to monitor training progress and adjust hyperparameters as needed for optimal performance.
+
+# Future Improvements and Enhancements
+
+## Real-Time Captioning Implementation
+
+### Planned Features
+- Integration with webcam feed for live video captioning
+- Real-time image processing pipeline
+- Low-latency caption generation
+- Streaming capability for continuous captioning
+
+### Technical Requirements
+```python
+# Future implementation example
+def real_time_captioning():
+    # Initialize webcam
+    cap = cv2.VideoCapture(0)
+    
+    while True:
+        # Capture frame
+        ret, frame = cap.read()
+        
+        # Process frame
+        processed_frame = preprocess_image(frame)
+        
+        # Generate caption
+        caption = generate_caption(model, processed_frame, word_to_idx, idx_to_word, max_length)
+        
+        # Display result
+        # Release resources when done
+```
+
+## Testing Improvements
+
+### Planned Enhancements
+
+1. **Evaluation Metrics**
+   - BLEU score implementation
+   - METEOR score
+   - CIDEr score
+   - ROUGE-L score
+
+```python
+# Example of future evaluation implementation
+def evaluate_model(model, test_data):
+    """
+    Comprehensive model evaluation
+    """
+    bleu_scores = calculate_bleu(predictions, references)
+    meteor_score = calculate_meteor(predictions, references)
+    cider_score = calculate_cider(predictions, references)
+    rouge_score = calculate_rouge(predictions, references)
+    
+    return {
+        'bleu': bleu_scores,
+        'meteor': meteor_score,
+        'cider': cider_score,
+        'rouge': rouge_score
+    }
+```
+
