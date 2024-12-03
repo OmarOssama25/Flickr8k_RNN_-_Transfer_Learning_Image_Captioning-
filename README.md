@@ -123,5 +123,132 @@ vocabulary, word_to_idx, idx_to_word = build_vocabulary(cleaned_captions)
 tokenizer = tokenize_captions(all_captions)
 ```
 
-## Note
-Make sure to have all required dependencies installed and the correct file paths set up before running the preprocessing pipeline.
+# Image Caption Generator - Model Training
+
+This section describes the model architecture, training process, and caption generation for the Image Caption Generator project.
+
+## Table of Contents
+- [Model Architecture](#model-architecture)
+- [Training Process](#training-process)
+- [Data Generation](#data-generation)
+- [Caption Generation](#caption-generation)
+- [Usage Example](#usage-example)
+
+## Model Architecture
+
+The model uses a combination of CNN features and LSTM for caption generation:
+
+```python
+def build_caption_generator(vocab_size, max_length, embedding_dim=256, rnn_units=512):
+```
+
+Key components:
+- Image feature input (2048-dimensional vector)
+- Caption input sequence
+- Word embedding layer
+- LSTM layer with dropout
+- Dense layer for word prediction
+
+Architecture details:
+- Embedding dimension: 256
+- LSTM units: 512
+- Dropout rate: 0.5
+- Activation: Softmax
+- Loss: Sparse categorical crossentropy
+- Optimizer: Adam (learning rate: 0.01)
+
+## Training Process
+
+The training process is managed by the `train_model` function:
+
+```python
+def train_model(train_captions, train_features, word_to_idx,
+                max_length=40, batch_size=32, epochs=5):
+```
+
+Training parameters:
+- Maximum sequence length: 40
+- Batch size: 32
+- Number of epochs: 5
+- Steps per epoch: Calculated based on total captions
+
+## Data Generation
+
+The data generator creates training batches on-the-fly:
+
+```python
+def data_generator(captions_dict, features_dict, word_to_idx, max_length, batch_size):
+```
+
+Features:
+- Randomly shuffles image IDs
+- Generates batches of image features and caption sequences
+- Handles padding of sequences
+- Creates input-output pairs for training
+
+## Caption Generation
+
+Caption generation process:
+
+```python
+def generate_caption(model, image_features, word_to_idx, idx_to_word, max_length):
+```
+
+Generation process:
+1. Starts with '<start>' token
+2. Iteratively predicts next word
+3. Stops when '<end>' token is predicted
+4. Handles unknown words with '<unk>' token
+
+## Usage Example
+
+1. Train the model:
+```python
+max_length = 40
+batch_size = 32
+epochs = 5
+
+model, history = train_model(
+    train_captions,
+    train_features,
+    word_to_idx,
+    max_length,
+    batch_size,
+    epochs
+)
+```
+
+2. Save the trained model:
+```python
+model.save('caption_generator_model.keras')
+```
+
+3. Generate captions:
+```python
+caption = generate_caption(
+    model,
+    image_features,
+    word_to_idx,
+    idx_to_word,
+    max_length
+)
+```
+
+## Model Parameters
+
+Default hyperparameters:
+- Embedding dimension: 256
+- RNN units: 512
+- Maximum sequence length: 40
+- Batch size: 32
+- Training epochs: 5
+- Learning rate: 0.01
+
+## Notes
+
+- The model uses teacher forcing during training
+- Dropout (0.5) is applied to prevent overfitting
+- The generator ensures efficient memory usage during training
+- The model can be fine-tuned by adjusting hyperparameters
+
+Remember to monitor training progress and adjust hyperparameters as needed for optimal performance.
